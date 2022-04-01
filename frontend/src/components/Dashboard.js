@@ -34,7 +34,7 @@ const Dashboard = () => {
           Object.values(item)
             // .join("")
             .toString()
-            .replaceAll(",", "")
+            .replaceAll(",", " ")
             .toLowerCase()
             .includes(searchValue.toLowerCase())
         );
@@ -97,7 +97,7 @@ const Dashboard = () => {
         id: id,
         name: updateName,
         email: updateEmail,
-        password: password
+        password: password,
       });
       // navigate("/dashboard");
       alert(res.data.msg);
