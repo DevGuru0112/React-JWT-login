@@ -106,3 +106,31 @@ export const Logout = async (req, res) => {
   // console.log(refreshToken);
   return res.sendStatus(200);
 };
+
+export const Update = async (req, res) => {
+  const { id, name, email } = req.body;
+  console.log(id, name, email);
+  try {
+    await Users.update(
+      { name: name, email: email },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
+    return res.json({ msg: "updated" });
+  } catch (err) {
+    res.status(404).json({ msg: "faild update" });
+  }
+};
+
+export const Delete = async (req, res) => {
+  // console.log("----------", req.body.name);
+  await Users.destroy({
+    where: {
+      name: req.body.name,
+    },
+  });
+  res.json({ msg: req.body.name + "----- successfully deleted" });
+};

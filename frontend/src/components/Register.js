@@ -12,18 +12,29 @@ const Register = () => {
 
   const Register = async (e) => {
     e.preventDefault();
-    try {
-      const res = await axios.post("http://localhost:5000/users", {
-        name: name,
-        email: email,
-        password: password,
-        confPassword: confPassword,
-      });
-      navigate("/");
-      alert(res.data.msg);
-    } catch (error) {
-      if (error.response) {
-        setMsg(error.response.data.msg);
+    if (name == "") {
+      setMsg("you need to type your name necessarily!");
+    } else if (email == "") {
+      setMsg("you neet to type your email necessarily!");
+    } else if (password == "") {
+      setMsg("you neet to type your password necessarily!");
+    } else if (confPassword == "") {
+      setMsg("you neet to confirm your password necessarily!");
+    } else {
+     
+      try {
+        const res = await axios.post("http://localhost:5000/users", {
+          name: name,
+          email: email,
+          password: password,
+          confPassword: confPassword,
+        });
+        navigate("/");
+        alert(res.data.msg);
+      } catch (error) {
+        if (error.response) {
+          setMsg(error.response.data.msg);
+        }
       }
     }
   };
@@ -32,6 +43,7 @@ const Register = () => {
     <section className="hero has-background-grey-light is-fullheight is-fullwidth">
       <div className="hero-body">
         <div className="container">
+          <p>{msg}</p>
           <div className="columns is-centered">
             <div className="column is-4-desktop">
               <form onSubmit={Register} className="box">
@@ -43,7 +55,7 @@ const Register = () => {
                       type="text"
                       className="input"
                       placeholder="Name"
-                      value={name}
+                      // value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
                   </div>
@@ -55,7 +67,7 @@ const Register = () => {
                       type="text"
                       className="input"
                       placeholder="Email"
-                      value={email}
+                      // value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
@@ -67,7 +79,7 @@ const Register = () => {
                       type="password"
                       className="input"
                       placeholder="******"
-                      value={password}
+                      // value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
@@ -79,7 +91,7 @@ const Register = () => {
                       type="password"
                       className="input"
                       placeholder="******"
-                      value={confPassword}
+                      // value={confPassword}
                       onChange={(e) => setConfPassword(e.target.value)}
                     />
                   </div>

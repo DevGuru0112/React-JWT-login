@@ -2,7 +2,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import "./dashboard.css";
 
 const Dashboard = () => {
   const [name, setName] = useState("");
@@ -11,13 +13,16 @@ const Dashboard = () => {
   const [users, setUsers] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [filteredResults, setFilteredResults] = useState([]);
+  const [updateName, setUpdateName] = useState();
+  const [updateEmail, setUpdateEmail] = useState();
+  const [msg, setMsg] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
     refreshToken();
     getUsers();
-  }, []);
+  }, [msg]);
 
   const searchItems = (searchValue) => {
     setSearchInput(searchValue);
@@ -84,9 +89,38 @@ const Dashboard = () => {
     setUsers(response.data);
   };
 
+  // console.log("success-------", updateName, updateEmail);
+  const update = async (id) => {
+    // e.preventDefault();
+    try {
+      const res = await axios.put("http://localhost:5000/update", {
+        id: id,
+        name: updateName,
+        email: updateEmail,
+      });
+      // navigate("/dashboard");
+      alert(res.data.msg);
+    } catch (error) {
+      if (error.response) {
+        // setMsg(error.response.data.msg);
+        alert(error.response.data.msg);
+      }
+    }
+  };
+
+  const Delete = async (name) => {
+    try {
+      const res = await axios.delete("http://localhost:5000/delete", {
+        data: { name },
+      });
+      setMsg(res.data.msg);
+    } catch (error) {}
+  };
+
   return (
     <div className="container mt-5">
       <h1>Welcome Back: {name}</h1>
+      <h2>{msg}</h2>
       <input
         className="input is-rounded"
         type="text"
@@ -108,12 +142,36 @@ const Dashboard = () => {
             ? filteredResults.map((user, index) => (
                 <tr key={user.id}>
                   <td>{index + 1}</td>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
+                  <td>
+                    <input
+                      className="upInput"
+                      type="text"
+                      defaultValue={user.name}
+                      onChange={(e) => setUpdateName(e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      className="upInput"
+                      type="text"
+                      defaultValue={user.email}
+                      onChange={(e) => setUpdateEmail(e.target.value)}
+                    />
+                  </td>
                   <td>
                     <div className="buttons">
-                      <button className="button is-info">Edit</button>
-                      <button className="button is-danger">Delete</button>
+                      <button
+                        className="button is-info"
+                        onClick={() => update(user.id)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="button is-danger"
+                        onClick={() => Delete(user.name)}
+                      >
+                        Delete
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -121,12 +179,36 @@ const Dashboard = () => {
             : users.map((user, index) => (
                 <tr key={user.id}>
                   <td>{index + 1}</td>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
+                  <td>
+                    <input
+                      className="upInput"
+                      type="text"
+                      defaultValue={user.name}
+                      onChange={(e) => setUpdateName(e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      className="upInput"
+                      type="text"
+                      defaultValue={user.email}
+                      onChange={(e) => setUpdateEmail(e.target.value)}
+                    />
+                  </td>
                   <td>
                     <div className="buttons">
-                      <button className="button is-info">Edit</button>
-                      <button className="button is-danger">Delete</button>
+                      <button
+                        className="button is-info"
+                        onClick={() => update(user.id)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="button is-danger"
+                        onClick={() => Delete(user.name)}
+                      >
+                        Delete
+                      </button>
                     </div>
                   </td>
                 </tr>

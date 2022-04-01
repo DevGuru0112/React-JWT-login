@@ -17,7 +17,7 @@ const Login = () => {
       });
       navigate("/dashboard");
       console.log("accesstoken-------", res.data.accessToken);
-      alert(res.data.success);
+      // alert(res.data.success);
     } catch (error) {
       if (error.response) {
         setMsg(error.response.data.msg);
