@@ -20,6 +20,7 @@ export const Register = async (req, res) => {
       .status(400)
       .json({ msg: "Password and Confirm password do not match" });
   const salt = await bcrypt.genSalt();
+  // console.log("------Lee", salt);
   const hashPassword = await bcrypt.hash(password, salt);
   try {
     await Users.create({
@@ -41,6 +42,8 @@ export const Login = async (req, res) => {
       },
     });
     const match = await bcrypt.compare(req.body.password, user[0].password);
+    console.log("bcryp-login input", req.body.password);
+    console.log("bcrypt---database", user[0].password);
     if (!match) return res.status(400).json({ msg: "Wrong Password" });
     const userId = user[0].id;
     const name = user[0].name;
@@ -52,7 +55,6 @@ export const Login = async (req, res) => {
         expiresIn: "15s",
       }
     );
-    // console.log("----------Lee", accessToken);
     const refreshToken = jwt.sign(
       { userId, name, email },
       process.env.REFRESH_TOKEN_SECRET,
@@ -60,6 +62,7 @@ export const Login = async (req, res) => {
         expiresIn: "1d",
       }
     );
+    console.log("----------Lee", refreshToken);
     await Users.update(
       { refresh_token: refreshToken },
       {
@@ -72,7 +75,7 @@ export const Login = async (req, res) => {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.json({ accessToken });
+    res.json({ accessToken: accessToken, success: "registered user" });
   } catch (error) {
     res.status(404).json({ msg: "Email not found" });
   }
@@ -87,6 +90,8 @@ export const Logout = async (req, res) => {
       refresh_token: refreshToken,
     },
   });
+  console.log("browsertoken------", refreshToken);
+  console.log("database token --------", user[0].refresh_token);
   if (!user[0]) return res.sendStatus(204);
   const userId = user[0].id;
   await Users.update(
@@ -98,5 +103,6 @@ export const Logout = async (req, res) => {
     }
   );
   res.clearCookie("refreshToken");
+  // console.log(refreshToken);
   return res.sendStatus(200);
 };

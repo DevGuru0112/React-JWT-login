@@ -9,12 +9,37 @@ const Dashboard = () => {
   const [token, setToken] = useState("");
   const [expire, setExpire] = useState("");
   const [users, setUsers] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const [filteredResults, setFilteredResults] = useState([]);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     refreshToken();
     getUsers();
   }, []);
+
+  const searchItems = (searchValue) => {
+    setSearchInput(searchValue);
+    console.log(users);
+    if (searchValue !== "") {
+      console.log(searchValue);
+      const filteredData = users.filter((item) => {
+        return (
+          Object.values(item)
+            // .join("")
+            .toString()
+            .replaceAll(",", "")
+            .toLowerCase()
+            .includes(searchValue.toLowerCase())
+        );
+      });
+      console.log("===============", searchValue);
+      setFilteredResults(filteredData);
+    } else {
+      setFilteredResults(users);
+    }
+  };
 
   const refreshToken = async () => {
     try {
@@ -25,7 +50,6 @@ const Dashboard = () => {
       setExpire(decoded.exp);
     } catch (error) {
       if (error.response) {
-        // history.push("/");
         navigate("/");
       }
     }
@@ -63,22 +87,50 @@ const Dashboard = () => {
   return (
     <div className="container mt-5">
       <h1>Welcome Back: {name}</h1>
+      <input
+        className="input is-rounded"
+        type="text"
+        onChange={(e) => searchItems(e.target.value)}
+        placeholder="Search..."
+      ></input>
       <table className="table is-striped is-fullwidth">
         <thead>
           <tr>
             <th>No</th>
             <th>Name</th>
             <th>Email</th>
+            <th>More</th>
           </tr>
         </thead>
         <tbody>
-          {users.map((user, index) => (
-            <tr key={user.id}>
-              <td>{index + 1}</td>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-            </tr>
-          ))}
+          {console.log("Lee---------", filteredResults, searchInput)}
+          {searchInput.length > 0
+            ? filteredResults.map((user, index) => (
+                <tr key={user.id}>
+                  <td>{index + 1}</td>
+                  <td>{user.name}</td>
+                  <td>{user.email}</td>
+                  <td>
+                    <div className="buttons">
+                      <button className="button is-info">Edit</button>
+                      <button className="button is-danger">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            : users.map((user, index) => (
+                <tr key={user.id}>
+                  <td>{index + 1}</td>
+                  <td>{user.name}</td>
+                  <td>{user.email}</td>
+                  <td>
+                    <div className="buttons">
+                      <button className="button is-info">Edit</button>
+                      <button className="button is-danger">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
         </tbody>
       </table>
     </div>

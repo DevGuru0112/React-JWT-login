@@ -13,13 +13,14 @@ const Register = () => {
   const Register = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/users", {
+      const res = await axios.post("http://localhost:5000/users", {
         name: name,
         email: email,
         password: password,
         confPassword: confPassword,
       });
       navigate("/");
+      alert(res.data.msg);
     } catch (error) {
       if (error.response) {
         setMsg(error.response.data.msg);
