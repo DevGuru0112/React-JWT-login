@@ -32,6 +32,7 @@ const Navbar = () => {
           </a>
 
           <a
+            href="javascript:void(0)"
             onClick={Logout}
             role="button"
             className="navbar-burger burger"

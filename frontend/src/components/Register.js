@@ -12,13 +12,13 @@ const Register = () => {
 
   const Register = async (e) => {
     e.preventDefault();
-    if (name == "") {
+    if (name === "") {
       setMsg("you need to type your name necessarily!");
-    } else if (email == "") {
+    } else if (email === "") {
       setMsg("you neet to type your email necessarily!");
-    } else if (password == "") {
+    } else if (password === "") {
       setMsg("you neet to type your password necessarily!");
-    } else if (confPassword == "") {
+    } else if (confPassword === "") {
       setMsg("you neet to confirm your password necessarily!");
     } else {
      

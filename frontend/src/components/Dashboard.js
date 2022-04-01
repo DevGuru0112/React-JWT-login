@@ -90,13 +90,14 @@ const Dashboard = () => {
   };
 
   // console.log("success-------", updateName, updateEmail);
-  const update = async (id) => {
+  const update = async (id, password) => {
     // e.preventDefault();
     try {
       const res = await axios.put("http://localhost:5000/update", {
         id: id,
         name: updateName,
         email: updateEmail,
+        password: password
       });
       // navigate("/dashboard");
       alert(res.data.msg);
@@ -133,6 +134,7 @@ const Dashboard = () => {
             <th>No</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Password</th>
             <th>More</th>
           </tr>
         </thead>
@@ -158,11 +160,12 @@ const Dashboard = () => {
                       onChange={(e) => setUpdateEmail(e.target.value)}
                     />
                   </td>
+                  <td>{user.password}</td>
                   <td>
                     <div className="buttons">
                       <button
                         className="button is-info"
-                        onClick={() => update(user.id)}
+                        onClick={() => update(user.id, user.password)}
                       >
                         Edit
                       </button>
@@ -195,11 +198,12 @@ const Dashboard = () => {
                       onChange={(e) => setUpdateEmail(e.target.value)}
                     />
                   </td>
+                  <td>{user.password}</td>
                   <td>
                     <div className="buttons">
                       <button
                         className="button is-info"
-                        onClick={() => update(user.id)}
+                        onClick={() => update(user.id, user.password)}
                       >
                         Edit
                       </button>
